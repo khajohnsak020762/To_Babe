@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>To เบบี๋ๆๆ 🌸</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  .letter-image{
+    text-align: center;
+    margin: 20px 0;
+}
+
+.letter-image img{
+    width: 40%;
+    max-width: 220px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,.15);
+}
+  :root{
+    --blush:#fbe4ec;
+    --rose:#e39fb8;
+    --deep-rose:#c9698f;
+    --plum:#5c3a52;
+    --cream:#fff8f2;
+    --gold:#d9a86c;
+    --ink:#4a2e42;
+    --shadow: 0 12px 40px rgba(92,58,82,0.18);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{
+    width:100%; height:100%;
+    font-family:'Prompt', sans-serif;
+    background: linear-gradient(160deg, var(--blush) 0%, #f6d3e0 45%, #eec2d6 100%);
+    color:var(--ink);
+    overflow:hidden;
+  }
+  #app{
+    position:relative;
+    width:100%;
+    height:100vh;
+    overflow:hidden;
+  }
+  .screen{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .6s ease;
+  }
+  .screen.active{
+    opacity:1;
+    pointer-events:auto;
+  }
+
+  /* ---------- decorative floating flowers (ambient, all screens) ---------- */
+  .bg-flowers{
+    position:absolute; inset:0; z-index:0; overflow:hidden; pointer-events:none;
+  }
+  .bg-flowers span{
+    position:absolute;
+    font-size: 22px;
+    opacity:.55;
+    animation: float 9s ease-in-out infinite;
+    filter: drop-shadow(0 4px 6px rgba(92,58,82,0.15));
+  }
+  @keyframes float{
+    0%,100%{ transform: translateY(0) rotate(0deg); }
+    50%{ transform: translateY(-18px) rotate(12deg); }
+  }
+
+  /* ---------- PAGE 1 : HOME ---------- */
+  #page-home .title{
+    font-size: clamp(26px, 6vw, 44px);
+    font-weight:600;
+    color:var(--plum);
+    text-align:center;
+    z-index:2;
+    text-shadow: 0 2px 10px rgba(255,255,255,0.6);
+    letter-spacing: .5px;
+  }
+  #page-home .subtitle{
+    margin-top:10px;
+    font-size:15px;
+    font-weight:300;
+    color:var(--deep-rose);
+    z-index:2;
+    opacity:.85;
+  }
+  .home-flower-ring{
+    position:relative;
+    width: min(78vw, 340px);
+    height: min(78vw, 340px);
+    margin: 28px 0 18px 0;
+    z-index:2;
+  }
+  .home-flower-ring .petal-btn{
+    position:absolute;
+    inset:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size: 92px;
+    background:none; border:none; cursor:pointer;
+    animation: sway 5s ease-in-out infinite;
+    filter: drop-shadow(0 10px 18px rgba(92,58,82,0.25));
+  }
+  @keyframes sway{
+    0%,100%{ transform: scale(1) rotate(-2deg); }
+    50%{ transform: scale(1.04) rotate(2deg); }
+  }
+  .home-flower-ring .secret-hint{
+    position:absolute;
+    bottom:-6px; left:50%; transform:translateX(-50%);
+    font-size:11px; color:var(--deep-rose); opacity:0; font-weight:300;
+    transition: opacity .4s ease;
+    white-space:nowrap;
+  }
+  .home-flower-ring:hover .secret-hint{ opacity:.7; }
+
+  .next-btn{
+    z-index:2;
+    margin-top: 22px;
+    padding: 13px 34px;
+    border-radius: 999px;
+    border: 1px solid var(--rose);
+    background: rgba(255,255,255,0.55);
+    color: var(--plum);
+    font-family:'Prompt', sans-serif;
+    font-size: 15px;
+    font-weight:500;
+    letter-spacing:.5px;
+    cursor:pointer;
+    backdrop-filter: blur(4px);
+    transition: all .3s ease;
+    opacity:0;
+    animation: appear 1.2s ease forwards;
+    animation-delay: 1.4s;
+  }
+  .next-btn:hover{ background: var(--rose); color:#fff; transform: translateY(-2px); box-shadow: var(--shadow); }
+  @keyframes appear{ to{ opacity:1; } }
+
+  .music-note{
+    position:absolute; z-index:3;
+    font-size:13px; color:var(--deep-rose);
+    opacity:0; pointer-events:none;
+    animation: notefly 2.2s ease-out forwards;
+  }
+  @keyframes notefly{
+    0%{ opacity:.9; transform: translateY(0) translateX(0) scale(1); }
+    100%{ opacity:0; transform: translateY(-70px) translateX(var(--nx,20px)) scale(1.3); }
+  }
+
+  /* ---------- PETAL SHOWER TRANSITION ---------- */
+  #petal-layer{
+    position:fixed; inset:0; z-index:999; pointer-events:none;
+  }
+  .petal{
+    position:absolute; top:-40px;
+    font-size: 20px;
+    animation: fall linear forwards;
+    opacity:.9;
+  }
+  @keyframes fall{
+    to{ transform: translateY(110vh) rotate(360deg); opacity:.2; }
+  }
+
+  /* ---------- PAGE 2 : LOCKED NOTEBOOK COVER ---------- */
+  #page-lock .notebook-cover{
+    position:relative;
+    width: min(78vw, 300px);
+    height: min(100vw, 380px);
+    background: linear-gradient(135deg, #7a4f6c, var(--plum) 70%);
+    border-radius: 6px 14px 14px 6px;
+    box-shadow: var(--shadow), inset -6px 0 12px rgba(0,0,0,0.25);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    z-index:2;
+    cursor:pointer;
+    transition: transform .3s ease;
+  }
+  #page-lock .notebook-cover:hover{ transform: translateY(-4px) rotate(-1deg); }
+  #page-lock .notebook-cover::before{
+    content:'';
+    position:absolute; left:14px; top:16px; bottom:16px; width:3px;
+    background: repeating-linear-gradient(180deg, rgba(255,255,255,0.15) 0 10px, transparent 10px 20px);
+  }
+  #page-lock .cover-title{
+    font-family:'Kalam', cursive;
+    font-size: 22px;
+    color: #f4dfe9;
+    text-align:center;
+    padding: 0 26px;
+    line-height:1.5;
+  }
+  #page-lock .key-icon{
+    font-size: 46px;
+    margin-top: 18px;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+    animation: dangle 3s ease-in-out infinite;
+    transform-origin: top center;
+  }
+  @keyframes dangle{
+    0%,100%{ transform: rotate(-6deg); }
+    50%{ transform: rotate(6deg); }
+  }
+  #page-lock .hint-text{
+    margin-top: 18px;
+    font-size: 13px;
+    color: var(--deep-rose);
+    z-index:2;
+    opacity:.8;
+  }
+
+  /* lock modal */
+  .lock-modal{
+    position:fixed; inset:0; z-index:200;
+    display:none;
+    align-items:center; justify-content:center;
+    background: rgba(74,46,66,0.55);
+    backdrop-filter: blur(3px);
+  }
+  .lock-modal.show{ display:flex; }
+  .lock-box{
+    background: var(--cream);
+    border-radius: 18px;
+    padding: 34px 28px;
+    width: min(84vw, 320px);
+    text-align:center;
+    box-shadow: var(--shadow);
+    animation: popIn .35s ease;
+  }
+  @keyframes popIn{ from{ transform: scale(.85); opacity:0;} to{ transform: scale(1); opacity:1;} }
+  .lock-box .lock-emoji{ font-size:34px; margin-bottom:6px; }
+  .lock-box p{ font-size:14px; color:var(--plum); margin-bottom:16px; }
+  .code-dots{
+    display:flex; gap:8px; justify-content:center; margin-bottom:18px;
+  }
+  .code-dots span{
+    width:14px; height:14px; border-radius:50%;
+    border:2px solid var(--rose);
+    transition: all .2s ease;
+  }
+  .code-dots span.filled{ background: var(--deep-rose); border-color:var(--deep-rose); }
+  .keypad{
+    display:grid; grid-template-columns: repeat(3, 1fr); gap:10px;
+    margin-bottom: 6px;
+  }
+  .keypad button{
+    padding: 14px 0;
+    border-radius: 12px;
+    border:none;
+    background: #fff0f4;
+    color: var(--plum);
+    font-size: 18px;
+    font-family:'Prompt', sans-serif;
+    cursor:pointer;
+    transition: all .15s ease;
+  }
+  .keypad button:hover{ background: var(--rose); color:#fff; }
+  .keypad button.wide{ grid-column: span 1; font-size:13px; }
+  .error-msg{
+    margin-top: 12px;
+    min-height: 20px;
+    font-size: 13px;
+    color: #b3486b;
+    font-weight:500;
+  }
+  .close-modal{
+    margin-top: 14px;
+    background:none; border:none;
+    font-size: 12px; color: var(--deep-rose);
+    text-decoration: underline; cursor:pointer;
+  }
+
+  /* ---------- PAGE 3 : NOTEBOOK OPEN ---------- */
+  #page-notebook{
+    perspective: 1200px;
+  }
+  .notebook-open{
+    position:relative;
+    width: min(90vw, 360px);
+    height: min(76vh, 460px);
+    background: var(--cream);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    z-index:2;
+    padding: 30px 26px 70px 26px;
+    display:flex; flex-direction:column;
+    background-image: repeating-linear-gradient(180deg, transparent 0 34px, rgba(201,105,143,0.12) 34px 35px);
+  }
+  .notebook-open::before{
+    content:'';
+    position:absolute; left:0; top:0; bottom:0; width:10px;
+    background: repeating-linear-gradient(180deg, var(--rose) 0 3px, transparent 3px 16px);
+    border-radius: 10px 0 0 10px;
+  }
+  .np-page{ display:none; flex:1; flex-direction:column; }
+  .np-page.active{ display:flex; }
+  .np-heading{
+    font-family:'Kalam', cursive;
+    font-size: 20px;
+    color: var(--deep-rose);
+    margin-bottom: 14px;
+  }
+  .np-text{
+    font-size: 14.5px;
+    line-height: 1.9;
+    color: var(--ink);
+    font-weight:300;
+    flex:1;
+  }
+  .np-text .editable{
+    color: var(--plum);
+    border-bottom: 1px dashed var(--rose);
+  }
+  .np-footer{
+    position:absolute; bottom: 22px; left:26px; right:26px;
+    display:flex; align-items:center; justify-content:space-between;
+    z-index:3;
+  }
+  .np-nav{
+    background: var(--rose);
+    color:#fff;
+    border:none;
+    width:40px; height:40px;
+    border-radius:50%;
+    font-size:16px;
+    cursor:pointer;
+    box-shadow: 0 4px 10px rgba(201,105,143,0.4);
+    transition: all .2s ease;
+  }
+  .np-nav:hover{ background: var(--deep-rose); transform: scale(1.08); }
+  .np-nav:disabled{ opacity:.3; cursor:default; transform:none; }
+  .np-dots{ display:flex; gap:6px; }
+  .np-dots span{ width:7px; height:7px; border-radius:50%; background: rgba(201,105,143,0.3); }
+  .np-dots span.on{ background: var(--deep-rose); }
+
+  /* ---------- PAGE 4 : ENVELOPE ---------- */
+  #page-envelope .envelope-wrap{
+    position:relative;
+    width: min(80vw, 300px);
+    height: 190px;
+    z-index:2;
+    animation: dropIn .6s ease;
+  }
+  @keyframes dropIn{
+    from{ transform: translateY(-40px) scale(.9); opacity:0; }
+    to{ transform: translateY(0) scale(1); opacity:1; }
+  }
+  .envelope{
+    position:relative;
+    width:100%; height:100%;
+    background: linear-gradient(135deg, #fdf1f6, #f7d9e6);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    cursor:pointer;
+    overflow:visible;
+  }
+  .envelope::before{
+    content:'';
+    position:absolute; top:0; left:0; right:0; height:100%;
+    background: linear-gradient(135deg, transparent 49.5%, rgba(0,0,0,0.05) 50%);
+  }
+  .flap{
+    position:absolute; top:0; left:0; width:100%; height:52%;
+    background: linear-gradient(135deg, #f3c4d8, #eab0c8);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transform-origin: top center;
+    transition: transform .6s ease;
+    z-index:5;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  }
+  .envelope.open .flap{ transform: rotateX(180deg); }
+  .seal{
+    position:absolute; top:38%; left:50%; transform:translate(-50%,-50%);
+    font-size: 30px; z-index:6;
+    filter: drop-shadow(0 3px 4px rgba(0,0,0,0.2));
+  }
+  .env-hint{
+    margin-top: 20px; font-size: 13px; color: var(--deep-rose); z-index:2; opacity:.85;
+  }
+
+  /* ---------- PAGE 5 : LETTER ---------- */
+  #page-letter{
+    padding: 20px;
+  }
+  .letter-paper{
+    position:relative;
+    width: min(88vw, 360px);
+    max-height: 82vh;
+    overflow-y:auto;
+    background: #fffaf5;
+    border-radius: 4px;
+    box-shadow: var(--shadow);
+    padding: 34px 28px;
+    z-index:2;
+    animation: unfold .55s ease;
+    background-image:
+      radial-gradient(circle at 90% 8%, rgba(217,168,108,0.12), transparent 40%);
+  }
+  @keyframes unfold{
+    from{ transform: scaleY(.3); opacity:0; }
+    to{ transform: scaleY(1); opacity:1; }
+  }
+  .letter-flowers{
+    text-align:center; font-size: 26px; margin-bottom:10px;
+  }
+  .letter-title{
+    font-family:'Kalam', cursive;
+    font-size: 22px;
+    color: var(--deep-rose);
+    text-align:center;
+    margin-bottom: 16px;
+  }
+  .letter-body{
+    font-size: 14.5px;
+    line-height: 2;
+    color: var(--ink);
+    font-weight:300;
+    white-space:pre-line;
+  }
+  .letter-body .editable{ color: var(--plum); border-bottom:1px dashed var(--rose); }
+  .letter-sign{
+    margin-top: 22px;
+    text-align:right;
+    font-family:'Kalam', cursive;
+    font-size: 18px;
+    color: var(--deep-rose);
+  }
+  .restart-btn{
+    display:block; margin: 22px auto 0 auto;
+    background:none; border:1px solid var(--rose); color:var(--deep-rose);
+    padding: 8px 20px; border-radius: 999px; font-size:12px; cursor:pointer;
+  }
+
+  /* audio indicator */
+  #music-indicator{
+    position:fixed; top:16px; right:16px; z-index:50;
+    font-size: 18px; opacity:0; transition: opacity .4s ease;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+  }
+  #music-indicator.show{ opacity:.8; animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse{ 0%,100%{ transform: scale(1);} 50%{ transform: scale(1.15);} }
+
+  @media (max-width: 380px){
+    .keypad button{ padding:12px 0; font-size:16px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ambient background flowers -->
+  <div class="bg-flowers" id="bgFlowers"></div>
+
+  <div id="music-indicator">🎵</div>
+
+  <!-- ================= PAGE 1: HOME ================= -->
+  <section class="screen active" id="page-home">
+    <div class="title">To U Kub เบบี๋</div>
+    <div class="subtitle">เธอลองแตะดอกไม้สิ</div>
+
+    <div class="home-flower-ring">
+      <button class="petal-btn" id="secretMusicBtn" aria-label="ดอกไม้">🌷</button>
+      <div class="secret-hint">psst.. แตะฉันสิ</div>
+    </div>
+
+    <button class="next-btn" id="toNotebookBtn">อ่ะหน้าต่อปายย 🌸</button>
+  </section>
+
+  <!-- ================= PAGE 2: LOCKED NOTEBOOK ================= -->
+  <section class="screen" id="page-lock">
+    <div class="notebook-cover" id="notebookCover">
+      <div class="cover-title">ไดอารี่ลับ<br>ของเรา จุ๊จุ๊</div>
+      <div class="key-icon">🔑</div>
+    </div>
+    <div class="hint-text">แตะที่สมุด เพื่อปลดล็อก</div>
+  </section>
+
+  <!-- lock modal -->
+  <div class="lock-modal" id="lockModal">
+    <div class="lock-box">
+      <div class="lock-emoji">📔</div>
+      <p>กรอกรหัส 6 หลักเพื่อปลดล็อกไดอารี่</p>
+      <div class="code-dots" id="codeDots">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="keypad" id="keypad">
+        <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
+        <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
+        <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
+        <button data-k="del">⌫</button><button data-k="0">0</button><button data-k="ok">✓</button>
+      </div>
+      <div class="error-msg" id="errorMsg"></div>
+      <button class="close-modal" id="closeModal">ปิดหน้าต่างนี้</button>
+    </div>
+  </div>
+
+  <!-- ================= PAGE 3: NOTEBOOK OPEN ================= -->
+  <section class="screen" id="page-notebook">
+    <div class="notebook-open">
+
+      <div class="np-page active" data-page="1">
+        <div class="np-heading">หน้าที่ 1 — จุดเริ่มต้น</div>
+        <div class="np-text">
+          <span class="editable">ครั้งแรกที่เราได้เจอกัน เค้าประทับใจมากที่เจอเธอ ตอนแรกก็ไม่นึกนะคะว่าเธอจะน่ารักขนาดนี้ ช่วงแรกๆเค้ายอมรับเลยว่ายังไงก็ไม่ยอมเปิดใจให้ใครแล้ว แต่พอมาเจอเบบี๋ตัวจริงแล้วบั่บบ หวั่นไหว เบบี๋น่ารักมากๆเลยแหละ
+            ตอนไปดูหนังก็อยากจะขอเฟิร์นอยู่ว่าให้เบบี๋มานั่งข้างๆได้ไหม 54455555 ดูหนังเสร็จเราก็ไปกินข้าว เธอโบ๊ะบ๊ะมาก45455555 ทำช้อนหล่นดั๊วะ ขำอ่ะะ
+          </span>
+        </div>
+      </div>
+
+      <div class="np-page" data-page="2">
+        <div class="np-heading">หน้าที่ 2 — ระหว่างทาง</div>
+        <div class="np-text">
+          <span class="editable">ในระหว่างนั้นก็พยายามเปิดใจกับเธอมากขึ้นเริ่มบอกว่าตัวเองชอบอะไร ไม่นึกว่าตัวเองจะชอบเธอ ระหว่างนั้นเค้าบอกตรงเค้าอ่ะไม่นึกว่าเบบี๋จะชอบเค้าชนาดนี้ทั้งๆที่เค้าเป็นคนคิดมากนิสัยเหมือนเด็กสุดๆเลยด้วย 
+            เค้าไม่อยากเอาภาระหรือความคิดเค้าไปให้เธอลำบากใจด้วย เพราะลำพังตัวเองก็คิดมากอยู่แล้ว แต่เธอก็ทำให้เค้าอยากจะเปิดใจให้เธอมากขึ้นเรื่อยๆด้วยเลยแหละ เค้าเลยไม่มีอะไรจะเสียแล้วก็เลยบอกเธอไปตรงๆ เลยว่าเค้าเป็นคนยังไง
+            แต่ก็ผิดคาดตรงที่เบบี๋รับเค้าได้ เค้าก็จะพยายามทำตัวเองให้ดีขึ้นเป็นความสุขของเบบี๋ให้ได้ เค้าชอบเวลาที่เราอยู่ด้วยกันมันทำให้เค้าหายคิดมาก มีความสุขมากๆเลยแหละอ้วน
+          </span>
+        </div>
+      </div>
+
+      <div class="np-page" data-page="3">
+        <div class="np-heading">หน้าที่ 3 — วันนี้และตลอดไป</div>
+        <div class="np-text">
+          <span class="editable">ก็ตรงๆอยากมีเบบี่ในทุกวันนะ เค้ารู้สึกเจอคนที่ดีมากๆและเค้าจะพยายามทำให้เบบี๋ไม่เสียใจ อยากเป็นคนที่ทำให้เบบี๋ยิ้มเยอะๆ อยู่ด้วยแล้วสบายใจ เราเจอกันช้าไปก็จริงแต่ก็เหมือนที่เขาบอกว่า "เราเจอกันช้าไปก็จริง...แต่เราเจอกันในเวอร์ชั่นที่ดีที่สุด"
+            เค้ารักเบบี๋มากๆเลยนะ ขอบคุณที่อยู่ด้วยกันมาตลอดและขอบคุณที่ทำให้เค้ามีความสุขมากๆเลยแหละ เบบี๋เป็นคนที่น่ารักมากๆเลยนะ เค้าจะพยายามทำให้เบบี๋มีความสุขที่สุดเท่าที่เค้าจะทำได้เลยนะคะ เลิฟยูนะเบบี๋อยู่กับเค้าไปนานๆนะคะะะะ
+          </span>
+        </div>
+      </div>
+
+      <div class="np-footer">
+        <button class="np-nav" id="npPrev">‹</button>
+        <div class="np-dots" id="npDots">
+          <span class="on"></span><span></span><span></span>
+        </div>
+        <button class="np-nav" id="npNext">›</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PAGE 4: ENVELOPE ================= -->
+  <section class="screen" id="page-envelope">
+    <div class="envelope-wrap">
+      <div class="envelope" id="envelope">
+        <div class="flap"></div>
+        <div class="seal">💌</div>
+      </div>
+    </div>
+    <div class="env-hint" id="envHint">แตะซองจดหมาย เพื่อเปิดอ่าน</div>
+  </section>
+
+  <!-- ================= PAGE 5: LETTER ================= -->
+  <section class="screen" id="page-letter">
+    <div class="letter-paper">
+      <div class="letter-flowers">🌸🌷🌼</div>
+      <div class="letter-title">ถึงคนที่น่ารักที่สุดดดด</div>
+      <div class="letter-body"><span class="editable">ต่อจกนี้ไม่ว่าอะไรจะเกิดขึ้น เค้าจะอยู่ข้างๆเบบี๋นะคะะะ จะคอยอยู่ข้างๆเธอเสมอ เป็นกำลังใจให้น้าา เค้ารักเบบี๋ๆๆๆๆนะคะะะ รักไม่ไหวแล้วโว๊ยยยย!!!</span></div>
+        <div class="letter-image">
+    <img src="me&babe.jpg" alt="รูปของเรา" width="40%" align="center">
+        </div>
+      <div class="letter-sign">ด้วยรักเสมอ 🌷</div>
+      <button class="restart-btn" id="restartBtn">↺ เริ่มใหม่</button>
+    </div>
+  </section>
+
+  <div id="petal-layer"></div>
+</div>
+
+<!-- ============= AUDIO =============
+  แก้ src ด้านล่างเป็นลิงก์เพลง mp3 ของคุณเอง
+  (อัปโหลดไฟล์เพลงไว้ที่ไหนสักที่แล้วเอาลิงก์มาใส่ตรงนี้)
+-->
+<audio id="bgMusic" loop preload="auto">
+    <source src="Joey.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+/* ---------------- ambient bg flowers ---------------- */
+const flowerEmojis = ['🌸','🌷','🌼','🌹','💮'];
+const bgFlowers = document.getElementById('bgFlowers');
+for(let i=0;i<14;i++){
+  const s = document.createElement('span');
+  s.textContent = flowerEmojis[Math.floor(Math.random()*flowerEmojis.length)];
+  s.style.left = Math.random()*94 + '%';
+  s.style.top = Math.random()*90 + '%';
+  s.style.fontSize = (14 + Math.random()*18) + 'px';
+  s.style.animationDelay = (Math.random()*5) + 's';
+  s.style.animationDuration = (7 + Math.random()*5) + 's';
+  bgFlowers.appendChild(s);
+}
+
+/* ---------------- screen navigation ---------------- */
+function goTo(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+/* ---------------- petal shower transition ---------------- */
+function petalShower(callback, count=26){
+  const layer = document.getElementById('petal-layer');
+  const emojis = ['🌸','🌷','💮','🌼'];
+  for(let i=0;i<count;i++){
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    p.style.left = Math.random()*100 + 'vw';
+    p.style.fontSize = (14 + Math.random()*16) + 'px';
+    const duration = 1.4 + Math.random()*1.2;
+    p.style.animationDuration = duration + 's';
+    p.style.animationDelay = (Math.random()*0.5) + 's';
+    layer.appendChild(p);
+    setTimeout(()=> p.remove(), (duration+0.6)*1000);
+  }
+  setTimeout(callback, 550);
+}
+
+/* ---------------- secret music button ---------------- */
+const music = document.getElementById('bgMusic');
+const musicIndicator = document.getElementById('music-indicator');
+let musicPlaying = false;
+
+document.getElementById('secretMusicBtn').addEventListener('click', (e)=>{
+  if(!musicPlaying){
+    music.play().catch(()=>{ /* user's browser blocked autoplay or no file set yet */ });
+    musicPlaying = true;
+    musicIndicator.classList.add('show');
+  } else {
+    music.pause();
+    musicPlaying = false;
+    musicIndicator.classList.remove('show');
+  }
+  // little floating music notes as feedback
+  for(let i=0;i<4;i++){
+    const n = document.createElement('div');
+    n.className = 'music-note';
+    n.textContent = ['♪','♫','♬'][Math.floor(Math.random()*3)];
+    n.style.left = (e.clientX + (Math.random()*30-15)) + 'px';
+    n.style.top = (e.clientY) + 'px';
+    n.style.setProperty('--nx', (Math.random()*40-20)+'px');
+    document.body.appendChild(n);
+    setTimeout(()=> n.remove(), 2300);
+  }
+});
+
+/* ---------------- page 1 -> page 2 ---------------- */
+document.getElementById('toNotebookBtn').addEventListener('click', ()=>{
+  petalShower(()=> goTo('page-lock'));
+});
+
+/* ---------------- lock modal logic ---------------- */
+const CORRECT_CODE = '240769';
+let enteredCode = '';
+const codeDots = document.querySelectorAll('#codeDots span');
+const errorMsg = document.getElementById('errorMsg');
+const lockModal = document.getElementById('lockModal');
+
+const wrongMessages = [
+  'จำไม่ได้หรอ เธอใส่ผิดนะครับเบบี๋ 🙄',
+  'ผิดแล้วน้า ลองคิดดีๆ อีกที เบบี๋ 🥹',
+  'เอ๊ะ วันสำคัญนี้ลืมได้ไงเนี่ย 😤',
+  'ไม่ใช่นะจ๊ะ ใบ้ให้อีกที… คิดดีๆ นะ',
+  'ผิดอีกแล้ว งอนละนะเนี่ย 🙃',
+  'เธอ~ ทวนความทรงจำหน่อยน้า 💭'
+];
+
+function updateDots(){
+  codeDots.forEach((d,i)=> d.classList.toggle('filled', i < enteredCode.length));
+}
+function resetCode(){
+  enteredCode = '';
+  updateDots();
+}
+function showError(msg){
+  errorMsg.textContent = msg;
+  setTimeout(()=>{ if(errorMsg.textContent === msg) errorMsg.textContent=''; }, 2600);
+}
+
+document.getElementById('notebookCover').addEventListener('click', ()=>{
+  resetCode();
+  errorMsg.textContent = '';
+  lockModal.classList.add('show');
+});
+document.getElementById('closeModal').addEventListener('click', ()=>{
+  lockModal.classList.remove('show');
+});
+
+document.getElementById('keypad').addEventListener('click', (e)=>{
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  const k = btn.dataset.k;
+  if(k === 'del'){
+    enteredCode = enteredCode.slice(0,-1);
+    updateDots();
+    return;
+  }
+  if(k === 'ok'){
+    if(enteredCode.length !== 6){
+      showError('ใส่ให้ครบ 6 หลักก่อนนะ');
+      return;
+    }
+    if(enteredCode === CORRECT_CODE){
+      lockModal.classList.remove('show');
+      petalShower(()=> goTo('page-notebook'));
+    } else {
+      showError(wrongMessages[Math.floor(Math.random()*wrongMessages.length)]);
+      resetCode();
+    }
+    return;
+  }
+  if(enteredCode.length < 6){
+    enteredCode += k;
+    updateDots();
+  }
+});
+
+/* ---------------- notebook pages nav ---------------- */
+const npPages = document.querySelectorAll('.np-page');
+const npDots = document.querySelectorAll('#npDots span');
+const npPrev = document.getElementById('npPrev');
+const npNext = document.getElementById('npNext');
+let npCurrent = 1;
+const npTotal = npPages.length;
+
+function renderNotebook(){
+  npPages.forEach(p => p.classList.toggle('active', Number(p.dataset.page) === npCurrent));
+  npDots.forEach((d,i)=> d.classList.toggle('on', i === npCurrent-1));
+  npPrev.disabled = npCurrent === 1;
+  npNext.textContent = (npCurrent === npTotal) ? '✉' : '›';
+}
+renderNotebook();
+
+npPrev.addEventListener('click', ()=>{
+  if(npCurrent > 1){ npCurrent--; renderNotebook(); }
+});
+npNext.addEventListener('click', ()=>{
+  if(npCurrent < npTotal){
+    npCurrent++;
+    renderNotebook();
+  } else {
+    petalShower(()=> goTo('page-envelope'));
+  }
+});
+
+/* ---------------- envelope ---------------- */
+const envelope = document.getElementById('envelope');
+const envHint = document.getElementById('envHint');
+let envOpened = false;
+envelope.addEventListener('click', ()=>{
+  if(envOpened) return;
+  envOpened = true;
+  envelope.classList.add('open');
+  envHint.textContent = 'กำลังเปิดจดหมาย… 💌';
+  setTimeout(()=>{
+    petalShower(()=> goTo('page-letter'), 34);
+  }, 750);
+});
+
+/* ---------------- restart ---------------- */
+document.getElementById('restartBtn').addEventListener('click', ()=>{
+  envOpened = false;
+  envelope.classList.remove('open');
+  envHint.textContent = 'แตะซองจดหมาย เพื่อเปิดอ่าน';
+  npCurrent = 1;
+  renderNotebook();
+  goTo('page-home');
+});
+
+</script>
+</body>
+</html>
